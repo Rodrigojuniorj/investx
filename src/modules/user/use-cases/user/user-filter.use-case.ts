@@ -6,7 +6,7 @@ import { BaseFilterResponseDto } from '@/commons/dto/base-filter-response.dto';
 
 @Injectable()
 export class UserFilterUseCase {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async execute(query: UserFilterDto): Promise<BaseFilterResponseDto<UserDto>> {
     return await this.userRepository.filterUser(query);

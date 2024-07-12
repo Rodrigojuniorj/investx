@@ -1,5 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserDto } from '../../dto/user.dto';
 import { UserRepository } from '../user.repository';
 import { BaseFilterResponseDto } from '@/commons/dto/base-filter-response.dto';
@@ -8,6 +8,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaHelper } from '@/helpers/prisma.helper';
 import { generateCacheKey } from '@/commons/utils/generate-cache-key.util';
 import { CacheRepository } from '@/cache/cache-repository';
+import { UserUpdateBodyDto } from '../../dto/user-update-body.dto';
 
 @Injectable()
 export class UserPrismaRepository implements UserRepository {
@@ -15,6 +16,14 @@ export class UserPrismaRepository implements UserRepository {
     private prisma: PrismaService,
     private cache: CacheRepository,
   ) {}
+
+  async findById(id: number): Promise<UserDto> {
+    return await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
 
   async findByEmail(email: string): Promise<UserDto> {
     return await this.prisma.user.findUnique({
@@ -24,10 +33,44 @@ export class UserPrismaRepository implements UserRepository {
     });
   }
 
+  async deleteUser(userId: number): Promise<void> {
+    try {
+      await this.prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
+
+      await this.cache.invalidateCache(`user-query-*`);
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException('Erro ao deletar o usuário');
+    }
+  }
+
+  async updateUser(userId: number, data: UserUpdateBodyDto): Promise<void> {
+    const update = await this.prisma.user.update({
+      data: {
+        email: data.email,
+        name: data.name,
+        hash: data.password,
+      },
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!update) {
+      throw new BadRequestException('Erro ao editar o usuário');
+    }
+
+    await this.cache.invalidateCache(`user-query-*`);
+  }
+
   async filterUser(
     query: UserFilterDto,
   ): Promise<BaseFilterResponseDto<UserDto>> {
-    const cacheKey = generateCacheKey(`user-`, query);
+    const cacheKey = generateCacheKey(`user-query`, query);
 
     const cacheExists = await this.cache.get(cacheKey);
     if (cacheExists) {

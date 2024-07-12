@@ -5,7 +5,7 @@ import { generateHash } from '@/commons/utils/generate-hash.util';
 
 @Injectable()
 export class SignUpUseCase {
-  constructor(private authRepository: AuthRepository) {}
+  constructor(private readonly authRepository: AuthRepository) {}
 
   async execute(data: UserBodyDto): Promise<void> {
     const user = await this.authRepository.findByEmail(data.email);

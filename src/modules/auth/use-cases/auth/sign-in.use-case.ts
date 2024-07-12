@@ -8,8 +8,8 @@ import { AuthDto } from '../../dto/auth.dto';
 @Injectable()
 export class SignInUseCase {
   constructor(
-    private authRepository: AuthRepository,
-    private tokenHelper: TokenHelper,
+    private readonly authRepository: AuthRepository,
+    private readonly tokenHelper: TokenHelper,
   ) {}
 
   async execute(data: AuthDto): Promise<tokens> {
