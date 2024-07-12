@@ -3,10 +3,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserDto } from '../../dto/user.dto';
 import { AuthRepository } from '../auth.repository';
 import { UserBodyDto } from '../../dto/user-body.dto';
+import { CacheRepository } from '@/cache/cache-repository';
 
 @Injectable()
 export class AuthPrismaRepository implements AuthRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private cache: CacheRepository,
+  ) {}
 
   async findByEmail(email: string): Promise<UserDto> {
     return await this.prisma.user.findUnique({
@@ -29,5 +33,7 @@ export class AuthPrismaRepository implements AuthRepository {
     if (!user) {
       throw new BadRequestException('Erro ao criar o usuário');
     }
+
+    await this.cache.invalidateCache(`user-*`);
   }
 }

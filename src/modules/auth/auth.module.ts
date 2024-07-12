@@ -9,6 +9,7 @@ import { TokenHelper } from '@/helpers/token.helper';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Env } from '@/env';
+import { CacheModule } from '@/cache/cache.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { Env } from '@/env';
         };
       },
     }),
+    CacheModule,
   ],
   controllers: [AuthController],
   providers: [

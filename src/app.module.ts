@@ -5,7 +5,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { envSchema } from '@/env';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
-import { AtGuard } from '@/commons/guards';
+import { AtGuard, RolesGuard } from '@/commons/guards';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -16,12 +17,17 @@ import { AtGuard } from '@/commons/guards';
     JwtModule,
     AuthModule,
     InvestmentModule,
+    UserModule,
   ],
   controllers: [],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AtGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
