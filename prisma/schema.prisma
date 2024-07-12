@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("postgresql")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -12,6 +12,7 @@ model User {
   name  String
   email String @unique
   hash  String
+  role  Role
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
@@ -19,6 +20,11 @@ model User {
   investments Investment[]
 
   @@map("users")
+}
+
+enum Role {
+  ADMINISTRATOR
+  USER
 }
 
 model Investment {
