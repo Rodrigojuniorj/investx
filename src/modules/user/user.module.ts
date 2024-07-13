@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { AtStrategy } from './strategies';
 import { UserRepository } from './repositories/user.repository';
 import {
   UserDeleteUseCase,
@@ -17,7 +16,6 @@ import { UserPrismaRepository } from './repositories/prisma/user-prisma.reposito
   controllers: [UserController],
   providers: [
     PrismaService,
-    AtStrategy,
     {
       provide: UserRepository,
       useClass: UserPrismaRepository,

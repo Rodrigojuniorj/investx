@@ -14,8 +14,8 @@ model User {
   hash  String
   role  Role
 
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   investments Investment[]
 
@@ -28,31 +28,34 @@ enum Role {
 }
 
 model Investment {
-  id            Int   @id @default(autoincrement())
-  userId        Int
-  initialAmount Float
-  currentAmount Float
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  initialAmount  Float
+  currentAmount  Float?
+  expectedAmount Float    @default(0)
+  investmentDate DateTime @db.Timestamptz(3)
 
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   user User @relation(fields: [userId], references: [id])
 
-  withdrawals Withdrawal[]
+  withdraws Withdraw[]
 
   @@index([userId], map: "index_user_id")
   @@map("investments")
 }
 
-model Withdrawal {
+model Withdraw {
   id           Int       @id @default(autoincrement())
   investmentId Int
+  withdraw     Float
   amount       Float
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime? @updatedAt @map("updated_at")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   investment Investment @relation(fields: [investmentId], references: [id])
 
   @@index([investmentId], map: "index_investment_id")
-  @@map("withdrawals")
+  @@map("withdraws")
 }

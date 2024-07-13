@@ -15,6 +15,9 @@ export function swaggerDocumentation(app: NestExpressApplication) {
     .setDescription('Aqui estão todos os endpoints')
     .setVersion('1.0')
     .addTag('Auth')
+    .addTag('User')
+    .addTag('Investment')
+    .addTag('Withdraw')
     .addBearerAuth(bearerAuthOptions, 'Bearer')
     .build();
 
