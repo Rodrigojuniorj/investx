@@ -22,6 +22,7 @@ export class InvestmentPrismaRepository implements InvestmentRepository {
         userId,
         initialAmount: data.initialAmount,
         currentAmount: data.initialAmount,
+        status: 'ATIVO',
         expectedAmount: data.initialAmount,
         investmentDate: DateHelper.convetToDateBD(data.investmentDate),
       },
@@ -55,6 +56,12 @@ export class InvestmentPrismaRepository implements InvestmentRepository {
 
     if (!investment) {
       throw new BadRequestException('Investimento não encontrado');
+    }
+
+    if (investment.status === 'ENCERRADO') {
+      throw new BadRequestException(
+        'Você já retirou todo o dinheiro desse investimento',
+      );
     }
 
     const balanceExpected = await this.calculateExpectedBalance(investment);

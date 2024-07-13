@@ -28,15 +28,16 @@ enum Role {
 }
 
 model Investment {
-  id             Int      @id @default(autoincrement())
+  id             Int              @id @default(autoincrement())
   userId         Int
   initialAmount  Float
   currentAmount  Float?
-  expectedAmount Float    @default(0)
-  investmentDate DateTime @db.Timestamptz(3)
-
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+  expectedAmount Float            @default(0)
+  finalAmount    Float            @default(0)
+  investmentDate DateTime         @db.Timestamptz(3)
+  status         InvestmentStatus
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime?        @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   user User @relation(fields: [userId], references: [id])
 
@@ -44,6 +45,11 @@ model Investment {
 
   @@index([userId], map: "index_user_id")
   @@map("investments")
+}
+
+enum InvestmentStatus {
+  ATIVO
+  ENCERRADO
 }
 
 model Withdraw {

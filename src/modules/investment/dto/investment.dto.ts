@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsDate, IsNumber } from 'class-validator';
 import { UserDto } from './user.dto';
+import { InvestmentStatus } from '@/commons/types';
 
 export class InvestmentDto {
   @ApiProperty({
@@ -30,6 +31,12 @@ export class InvestmentDto {
   })
   @IsNumber()
   currentAmount?: number;
+
+  @ApiProperty({
+    description: 'Status',
+    example: 'ATIVO',
+  })
+  status: InvestmentStatus;
 
   @ApiProperty({
     description: 'Data de criação do registro',

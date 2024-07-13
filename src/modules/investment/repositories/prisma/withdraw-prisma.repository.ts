@@ -31,7 +31,16 @@ export class WithdrawPrismaRepository implements WithdrawRepository {
       throw new BadRequestException('Investimento não encontrado');
     }
 
-    if (amount <= 0 || amount > investment.currentAmount) {
+    if (investment.status === 'ENCERRADO') {
+      throw new BadRequestException(
+        'Você já retirou todo o dinheiro desse investimento',
+      );
+    }
+
+    if (
+      amount <= 0 ||
+      (amount > investment.finalAmount && investment.finalAmount > 0)
+    ) {
       throw new BadRequestException('Valor da retirada inválido');
     }
 
@@ -58,24 +67,36 @@ export class WithdrawPrismaRepository implements WithdrawRepository {
       currentAmount: updatedCurrentAmount,
     });
 
-    const updateWithDraw = await this.prisma.investment.update({
-      where: { id: investmentId },
-      data: {
-        currentAmount: updatedCurrentAmount,
-        expectedAmount: updatedExpectedAmount,
-        updatedAt: new Date(),
+    const withdrawInvestment = await this.prisma.investment.findFirst({
+      where: {
+        id: investmentId,
+        userId,
       },
-      select: {
+      include: {
         withdraws: true,
       },
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { totalAmount, totalWithdrawal } = this.sumWithdraws(
-      updateWithDraw.withdraws,
+      withdrawInvestment.withdraws,
     );
 
     const balanceWithInterest = updatedExpectedAmount - totalWithdrawal;
+
+    await this.prisma.investment.update({
+      where: { id: investmentId },
+      data: {
+        currentAmount: updatedCurrentAmount,
+        expectedAmount: updatedExpectedAmount,
+        status: balanceWithInterest === 0 ? 'ENCERRADO' : 'ATIVO',
+        finalAmount: balanceWithInterest,
+        updatedAt: new Date(),
+      },
+      select: {
+        withdraws: true,
+      },
+    });
 
     return {
       withdraw: {
