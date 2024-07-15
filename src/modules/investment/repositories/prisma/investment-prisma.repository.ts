@@ -153,7 +153,7 @@ export class InvestmentPrismaRepository implements InvestmentRepository {
     return formattedExpectedBalance;
   }
 
-  async filterInvestment(query: InvestmentFilterDto) {
+  async filterInvestment(query: InvestmentFilterDto, userId: number) {
     const cacheKey = generateCacheKey(`user-query`, query);
 
     const cacheExists = await this.cache.get(cacheKey);
@@ -184,6 +184,8 @@ export class InvestmentPrismaRepository implements InvestmentRepository {
     if (query.status) {
       where.status = query.status;
     }
+
+    where.userId = userId;
 
     const investments = await PrismaHelper.paginate<
       WithdrawInvestmentDto,

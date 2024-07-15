@@ -6,7 +6,7 @@ import { InvestmentFilterDto } from '../../dto/investment-filter.dto';
 export class InvestmentFilterUseCase {
   constructor(private readonly investmentRepository: InvestmentRepository) {}
 
-  async execute(query: InvestmentFilterDto) {
-    return await this.investmentRepository.filterInvestment(query);
+  async execute(query: InvestmentFilterDto, userId: number) {
+    return await this.investmentRepository.filterInvestment(query, userId);
   }
 }

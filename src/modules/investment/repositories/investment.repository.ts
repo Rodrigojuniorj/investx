@@ -13,5 +13,5 @@ export abstract class InvestmentRepository {
     userId,
   ): Promise<InvestmentResponseDto>;
 
-  abstract filterInvestment(query: InvestmentFilterDto);
+  abstract filterInvestment(query: InvestmentFilterDto, userId: number);
 }

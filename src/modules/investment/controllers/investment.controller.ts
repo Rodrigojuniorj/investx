@@ -32,8 +32,11 @@ export class InvestmentController {
 
   @Get('/filter')
   @HttpCode(HttpStatus.OK)
-  async filter(@Query() query: InvestmentFilterDto) {
-    return await this.investmentFilterUseCase.execute(query);
+  async filter(
+    @Query() query: InvestmentFilterDto,
+    @GetCurrentUserId() userId: number,
+  ) {
+    return await this.investmentFilterUseCase.execute(query, userId);
   }
 
   @Post('/')
