@@ -43,3 +43,9 @@ Para compilar e rodar o projeto, siga os passos abaixo:
 - **dotenv**: Para carregar variáveis de ambiente.
 ## Documentação da API 
 A documentação da API gerada pelo Swagger pode ser acessada após iniciado o projeto em: [Documentação da API](http://localhost:3333/api/v1/documentation).
+- **Login Administrador**: 
+   ```bash
+   {
+      "email": "rodrigotavaresfranco@gmail.com",
+      "password": "rodrigo123@"
+   }
