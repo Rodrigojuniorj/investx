@@ -6,15 +6,18 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { InvestmentBodyDto } from '../dto/investment-body.dto';
 import {
   CreateInvestmentUseCase,
   GetInvestmentByIdUseCase,
+  InvestmentFilterUseCase,
 } from '../use-cases';
 import { GetCurrentUserId, Roles } from '@/commons/decorators';
 import { InvestmentResponseDto } from '../dto/investment-response.dto';
+import { InvestmentFilterDto } from '../dto/investment-filter.dto';
 
 @ApiTags('Investment')
 @ApiBearerAuth('Bearer')
@@ -24,7 +27,14 @@ export class InvestmentController {
   constructor(
     private readonly createInvestmentUseCase: CreateInvestmentUseCase,
     private readonly getInvestmentByIdUseCase: GetInvestmentByIdUseCase,
+    private readonly investmentFilterUseCase: InvestmentFilterUseCase,
   ) {}
+
+  @Get('/filter')
+  @HttpCode(HttpStatus.OK)
+  async filter(@Query() query: InvestmentFilterDto) {
+    return await this.investmentFilterUseCase.execute(query);
+  }
 
   @Post('/')
   @HttpCode(HttpStatus.CREATED)

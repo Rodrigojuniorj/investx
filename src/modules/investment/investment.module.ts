@@ -8,6 +8,7 @@ import {
   CreateInvestmentUseCase,
   CreateWithdrawUseCase,
   GetInvestmentByIdUseCase,
+  InvestmentFilterUseCase,
 } from './use-cases';
 import { WithdrawController } from './controllers/withdraw.controller';
 import { WithdrawRepository } from './repositories/withdraw.repository';
@@ -29,6 +30,7 @@ import { WithdrawPrismaRepository } from './repositories/prisma/withdraw-prisma.
     CreateInvestmentUseCase,
     GetInvestmentByIdUseCase,
     CreateWithdrawUseCase,
+    InvestmentFilterUseCase,
   ],
 })
 export class InvestmentModule {}

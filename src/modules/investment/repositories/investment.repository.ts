@@ -1,4 +1,5 @@
 import { InvestmentBodyDto } from '../dto/investment-body.dto';
+import { InvestmentFilterDto } from '../dto/investment-filter.dto';
 import { InvestmentResponseDto } from '../dto/investment-response.dto';
 
 export abstract class InvestmentRepository {
@@ -11,4 +12,6 @@ export abstract class InvestmentRepository {
     investmentId: number,
     userId,
   ): Promise<InvestmentResponseDto>;
+
+  abstract filterInvestment(query: InvestmentFilterDto);
 }

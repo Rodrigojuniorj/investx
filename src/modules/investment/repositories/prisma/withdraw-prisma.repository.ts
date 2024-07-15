@@ -98,6 +98,8 @@ export class WithdrawPrismaRepository implements WithdrawRepository {
       },
     });
 
+    await this.cache.invalidateCache(`user-query-*`);
+
     return {
       withdraw: {
         ...withdraw,
