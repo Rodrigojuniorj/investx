@@ -1,21 +1,6 @@
 version: '3.8'
 
 services:
-  # db postgresql
-  investx-postgres:
-    image: bitnami/postgresql:latest
-    container_name: investx-postgres
-    ports:
-      - '5432:5432'
-    environment:
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=investx
-    volumes:
-      - pg_data_investx:/bitnami/postgresql
-    networks:
-      - investx-network
-    
   # cache Redis
   investx-cache:
     container_name: investx-cache
@@ -40,7 +25,6 @@ services:
       - REFRESH_TOKEN=${REFRESH_TOKEN}
       - REDIS_HOST=investx-cache
     depends_on:
-      - investx-postgres
       - investx-cache
     networks:
       - investx-network
@@ -49,8 +33,6 @@ networks:
   investx-network:
     name: investx-network
     driver: bridge
-    external: true
 
 volumes:
-  pg_data_investx:
   redis_data:

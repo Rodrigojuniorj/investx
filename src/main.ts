@@ -5,6 +5,13 @@ import { Env } from '@/env';
 import { ValidationPipe } from '@nestjs/common';
 import { swaggerDocumentation } from '@/swagger-documentation';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import helmet from 'helmet';
+import reteLimit from 'express-rate-limit';
+
+const limiter = reteLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // Limite de 100 requisições por IP
+});
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
@@ -20,6 +27,8 @@ async function bootstrap() {
 
   swaggerDocumentation(app);
 
+  app.use(helmet());
+  app.use(limiter);
   await app.listen(port);
 }
 bootstrap();
