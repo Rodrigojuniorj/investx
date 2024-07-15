@@ -41,7 +41,7 @@ export class UserPrismaRepository implements UserRepository {
         },
       });
 
-      await this.cache.invalidateCache(`user-query-*`);
+      await this.cache.invalidateCache(`user-query-${userId}-*`);
     } catch (error) {
       console.error(error);
       throw new BadRequestException('Erro ao deletar o usuário');
@@ -64,7 +64,7 @@ export class UserPrismaRepository implements UserRepository {
       throw new BadRequestException('Erro ao editar o usuário');
     }
 
-    await this.cache.invalidateCache(`user-query-*`);
+    await this.cache.invalidateCache(`user-query-${userId}-*`);
   }
 
   async filterUser(

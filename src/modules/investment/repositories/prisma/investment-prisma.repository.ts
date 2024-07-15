@@ -38,7 +38,7 @@ export class InvestmentPrismaRepository implements InvestmentRepository {
       throw new BadRequestException('Erro ao criar o investimento');
     }
 
-    await this.cache.invalidateCache(`user-query-*`);
+    await this.cache.invalidateCache(`user-query-${userId}-*`);
   }
 
   async getInvestmentById(
@@ -79,7 +79,7 @@ export class InvestmentPrismaRepository implements InvestmentRepository {
 
     const balanceWithInterest = balanceExpected - totalWithdrawal;
 
-    await this.cache.invalidateCache(`user-query-*`);
+    await this.cache.invalidateCache(`user-query-${userId}-*`);
 
     return {
       id: investment.id,
@@ -154,7 +154,7 @@ export class InvestmentPrismaRepository implements InvestmentRepository {
   }
 
   async filterInvestment(query: InvestmentFilterDto, userId: number) {
-    const cacheKey = generateCacheKey(`user-query`, query);
+    const cacheKey = generateCacheKey(`user-query-${userId}`, query);
 
     const cacheExists = await this.cache.get(cacheKey);
     if (cacheExists) {

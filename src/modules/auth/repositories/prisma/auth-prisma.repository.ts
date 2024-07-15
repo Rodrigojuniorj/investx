@@ -34,6 +34,6 @@ export class AuthPrismaRepository implements AuthRepository {
       throw new BadRequestException('Erro ao criar o usuário');
     }
 
-    await this.cache.invalidateCache(`user-query-*`);
+    await this.cache.invalidateCache(`user-query-${user.id}-*`);
   }
 }
