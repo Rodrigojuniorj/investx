@@ -16,14 +16,18 @@ const limiter = reteLimit({
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
 
-  app.enableCors();
-
   const configService = app.get<ConfigService<Env, true>>(ConfigService);
   const port = configService.get('PORT', { infer: true });
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app.setGlobalPrefix('/api/v1');
+
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+  });
 
   swaggerDocumentation(app);
 
