@@ -28,6 +28,7 @@ services:
       - investx-cache
     networks:
       - investx-network
+    restart: always
 
 networks:
   investx-network:
